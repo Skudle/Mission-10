@@ -4,7 +4,39 @@ from graphics import GraphWin, Line, Point
 # la valeur pi pour notre calcul de la position d'un point
 from math import pi, cos, sin            
 import turtle
-class XYRobot:
+
+
+class Robot:
+    def __init__(self, nom):
+        self.__nom = nom
+        self.__action = []
+
+    def add_action(self, act, d_or_a):
+        self.__action.append((act, d_or_a))
+
+    def history(self):
+        return self.__action
+
+    def nom(self):
+        return self.__nom
+
+    def move_forward(self, distance):
+        self.nom().move_forward(distance)
+
+    def move_backward(self, distance):
+        self.nom().move_backward(distance)
+
+    def turn_left(self):
+        self.nom().turn_left()
+
+    def turn_right(self):
+        self.nom().turn_right()
+
+    def unplay(self):
+        pass
+
+
+class XYRobot(Robot):
     
     def __init__(self,nom,x=0,y=0) :
         # nom du robot
@@ -76,15 +108,17 @@ class XYRobot:
         self.__set_y(old_y + orientation_y * distance * sense)
         self.__draw_from(old_x,old_y)
 
-    def move_forward(self,distance) :
+    def move_forward(self, distance) :
         """ fait avancer le robot de distances pixels
             et trace une ligne lors de ce mouvement """
         self.__move(distance,1)
+        super().add_action("move_forward", distance)
 
     def move_backward(self,distance) :
         """ fait reculer le robot de distances pixels
             et trace une ligne lors de ce mouvement """
         self.__move(distance,-1)
+        super().add_action("move_backward", distance)
 
     def __turn(self,direction) :
         """ méthode auxiliaire pour les méthodes turn_right() et turn_left()
@@ -100,27 +134,38 @@ class XYRobot:
             (dans le sens des aiguilles d'une montre)
         """
         self.__turn(1)
+        super().add_action("turn_right", 90)
 
     def turn_left(self) :
         """ fait tourner le robot de 90 degrés vers la gauche
             (dans le sens contraire des aiguilles d'une montre)
         """
         self.__turn(-1)
+        super().add_action("turn_left", 90)
 
 
-class TurtleBot:
+class TurtleBot(Robot):
 
-    def __init__(self, nom):
-        # nom du robot
-        #nom = turtle.Turtle()
+    def __init__(self, nom, x=0, y=0):
+        super().__init__(nom)
+
         self.__t = turtle.Turtle()
-        self.__nom = nom
-        # angle en degres radius représentant la direction du robot
-        # fenêtre graphique sur laquelle le chemin du robot sera tracé;
-        # le point à la position (0,0) se trouve dans le coin supérieur gauche
+        self.wn = turtle.Screen()
+        self.__x = x
+        self.__y = y
+        self.__angle = 0
 
-    def angle_rad(self) :
-        "retourne l'angle en degres radius représentant la direction du robot"
+    def x(self):
+        return round(self.__x)
+
+    def y(self):
+        return round(self.__y)
+
+    def angle_rad(self):
+        '''
+        retourne l'angle en degres radius représentant la direction du robot
+        '''
+
         return self.__angle
 
     def __str__(self):
@@ -132,33 +177,36 @@ class TurtleBot:
                str(round(self.y())) +") angle: "+str(self.angle())
 
     def nom(self):
-        return self.__nom
-
-    def x(self):
-        return round(self.__x)
-
-    def y(self):
-        return round(self.__y)
+        return super().nom()
 
     def angle(self) :
         "retourne l'angle en degres représentant la direction du robot"
         #return ( self.angle_rad() * 180 / pi ) % 360
-        return self.__t.heading()
+        self.__angle = self.__t.heading()
+        return self.__angle
 
     def move_forward(self, distance):
         self.__t.forward(distance)
-    
+        self.__x = self.__t.xcor()
+        self.__y = self.__t.ycor()
+        super().add_action('move_forward', distance)
+
     def move_backward(self, distance):
         self.__t.backward(distance)
+        self.__x = self.__t.xcor()
+        self.__y = self.__t.ycor()
+        super().add_action('move_backward', distance)
     
     def turn_left(self):
         self.__t.left(90)
+        super().add_action("turn_left", 90)
 
     def turn_right(self):
         self.__t.right(90)
+        super().add_action("turn_right", 90)
 
     def position(self):
-        return self.__t.position()
+        return self.x(), self.y()
 
 
 # Exemple d'utilisation de cette classe (il suffit d'exécuter ce fichier)
@@ -197,6 +245,21 @@ if __name__ == '__main__':
     r2d2.move_forward(50)
     r2d2.turn_right()
     print(r2d2)'''
+    toto = TurtleBot("Toto")
+    toto.move_forward(50)
+    toto.turn_left()
+    toto.turn_right()
+    toto.move_backward(50)
+    print(toto.history())
+    r2d2 = XYRobot("R2-D2", 100, 100)
+    r2d2.move_forward(50)
+    r2d2.turn_left()
+    r2d2.turn_right()
+    r2d2.move_backward(50)
+    print(r2d2.history())
+
+    toto.wn.mainloop()
+
 
 
 

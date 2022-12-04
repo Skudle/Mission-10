@@ -28,7 +28,5 @@ class Robot:
         pass
 
 
-toto = TurtleBot("toto")
-toto2 = Robot(toto)
-toto2.turn_right()
+
 
