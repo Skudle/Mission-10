@@ -3,8 +3,8 @@ from graphics import GraphWin, Line, Point
 # nous avons aussi besoin des fonctions cos et sin ainsi que 
 # la valeur pi pour notre calcul de la position d'un point
 from math import pi, cos, sin            
-
-class XYRobot :
+import turtle
+class XYRobot:
     
     def __init__(self,nom,x=0,y=0) :
         # nom du robot
@@ -30,10 +30,10 @@ class XYRobot :
         return self.__nom
 
     def x(self) :
-        return self.__x
+        return round(self.__x)
     
     def y(self) :
-        return self.__y
+        return round(self.__y)
     
     def angle_rad(self) :
         "retourne l'angle en degres radius représentant la direction du robot"    
@@ -107,12 +107,66 @@ class XYRobot :
         """
         self.__turn(-1)
 
+
+class TurtleBot:
+
+    def __init__(self, nom):
+        # nom du robot
+        #nom = turtle.Turtle()
+        self.__t = turtle.Turtle()
+        self.__nom = nom
+        # angle en degres radius représentant la direction du robot
+        # fenêtre graphique sur laquelle le chemin du robot sera tracé;
+        # le point à la position (0,0) se trouve dans le coin supérieur gauche
+
+    def angle_rad(self) :
+        "retourne l'angle en degres radius représentant la direction du robot"
+        return self.__angle
+
+    def __str__(self):
+        """
+        Imprime un string du type "R2-D2@(100,100) angle: 0.0" représentant le nom,
+        les coordonnées et l'orientation du robot.
+        """
+        return str(self.nom()) + "@(" + str(round(self.x())) + "," + \
+               str(round(self.y())) +") angle: "+str(self.angle())
+
+    def nom(self):
+        return self.__nom
+
+    def x(self):
+        return round(self.__x)
+
+    def y(self):
+        return round(self.__y)
+
+    def angle(self) :
+        "retourne l'angle en degres représentant la direction du robot"
+        #return ( self.angle_rad() * 180 / pi ) % 360
+        return self.__t.heading()
+
+    def move_forward(self, distance):
+        self.__t.forward(distance)
+    
+    def move_backward(self, distance):
+        self.__t.backward(distance)
+    
+    def turn_left(self):
+        self.__t.left(90)
+
+    def turn_right(self):
+        self.__t.right(90)
+
+    def position(self):
+        return self.__t.position()
+
+
 # Exemple d'utilisation de cette classe (il suffit d'exécuter ce fichier)
 if __name__ == '__main__':
 
     # create robot called R2-D2 at position (100,100) and facing East,
     # to be more or less in the center of the window
-    r2d2 = XYRobot("R2-D2",100,100)
+    '''r2d2 = XYRobot("R2-D2",100,100)
 
     print(r2d2)
     #R2-D2@(100, 100) angle: 0.0
@@ -142,4 +196,7 @@ if __name__ == '__main__':
     print(r2d2)
     r2d2.move_forward(50)
     r2d2.turn_right()
-    print(r2d2)
+    print(r2d2)'''
+
+
+

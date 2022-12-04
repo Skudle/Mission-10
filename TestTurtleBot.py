@@ -1,14 +1,14 @@
 import unittest
-from XYRobot import XYRobot
+from XYRobot import XYRobot, TurtleBot
 #import TurtleBot as tb
 
-'''class TestTurtleBot(unittest.TestCase):
+class TestTurtleBot(unittest.TestCase):
 
-    t = tb.TurtleBot("tBot")
+    t = TurtleBot("tBot")
     
     def test_init(self):
         self.assertEqual(self.t.angle(), 0,        "Your turtleBot is not facing EAST as expected")
-        self.assertEqual(self.t.position(), (0,0), "Your turtleBot is not in 0,0 as expected")
+        self.assertEqual(self.t.position(), (0, 0), "Your turtleBot is not in 0,0 as expected")
 
     def test_turn_left(self):
         expected_position = self.t.position()
@@ -61,11 +61,12 @@ from XYRobot import XYRobot
         self.t.move_backward(90)
         self.t.move_forward(50)
         self.assertAlmostEqual(self.t.angle(), expected_angle, msg = "Your turtleBot took a wrong turn or did not update its angle")
-        self.assertEqual(self.t.position(), expected_position, "Your turtleBot changed position while turning")'''
+        self.assertEqual(self.t.position(), expected_position, "Your turtleBot changed position while turning")
 
 
 class TestXYRobot(unittest.TestCase):
     r2d2 = XYRobot("R2-D2")
+
     def test_move_forward(self):
         forward = 50
         x, y = TestXYRobot.r2d2.position()
@@ -84,6 +85,41 @@ class TestXYRobot(unittest.TestCase):
         self.assertEqual(expected_position, TestXYRobot.r2d2.position())
         self.assertEqual(expected_angle, TestXYRobot.r2d2.angle())
 
+    def test_turn_left(self):
+        forward = 50
+        x, y = TestXYRobot.r2d2.position()
+        expected_position = (x + forward, y + 0)
+        expected_angle = TestXYRobot.r2d2.angle()
+        for i in range(4):
+            TestXYRobot.r2d2.turn_left()
+        TestXYRobot.r2d2.move_forward(50)
+        self.assertEqual(expected_position, TestXYRobot.r2d2.position())
+        self.assertEqual(expected_angle, TestXYRobot.r2d2.angle())
+
+    def test_turn_right(self):
+        forward = 50
+        x, y = TestXYRobot.r2d2.position()
+        expected_position = (x + 0, y + forward)
+        TestXYRobot.r2d2.turn_right()
+        expected_angle = TestXYRobot.r2d2.angle()
+        TestXYRobot.r2d2.move_forward(forward)
+        self.assertEqual(expected_position, TestXYRobot.r2d2.position())
+        self.assertEqual(expected_angle, TestXYRobot.r2d2.angle())
+
+    def test_square(self):
+        """
+        test pour faire un carré
+
+        """
+        forward = 50
+        x, y = TestXYRobot.r2d2.position()
+        expected_position = (x + 0, y + 0)
+        expected_angle = TestXYRobot.r2d2.angle()
+        for i in range(4):
+            TestXYRobot.r2d2.move_forward(forward)
+            TestXYRobot.r2d2.turn_right()
+        self.assertEqual(expected_position, TestXYRobot.r2d2.position())
+        self.assertEqual(expected_angle, TestXYRobot.r2d2.angle())
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
